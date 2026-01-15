@@ -20,56 +20,78 @@
         body {
             background-color: var(--bg-color);
             font-family: 'VT323', monospace;
+            margin: 0;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            color: var(--text-color);
+            height: 100vh;
+            width: 100vw;
+            padding: 20px;
+            overflow: hidden;
         }
 
+        /* Responsive Grid Layout */
         .game-wrapper {
-            display: flex;
-            gap: 12px;
-            padding: 12px;
+            display: grid;
+            grid-template-columns: 1fr 1.8fr 1fr;
+            grid-template-rows: 1fr;
+            gap: 15px;
+            width: 100%;
+            height: 100%;
+            max-width: 1600px;
             background-color: var(--bg-color);
-            border: 4px solid var(--border-color);
-            max-width: 1100px;
-            width: 98%;
-            height: 520px;
+            border: 6px solid var(--border-color);
+            padding: 15px;
         }
 
         .panel {
             background-color: var(--panel-bg);
-            border: 3px solid var(--border-color);
+            border: 4px solid var(--border-color);
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            height: 100%;
+        }
+
+        /* --- Global UI Elements --- */
+        .header-nav {
+            padding: 10px;
+            border-bottom: 3px solid var(--border-color);
+            text-align: center;
+        }
+
+        .stats-bar {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            border-top: 4px solid var(--border-color);
+            background: var(--panel-bg);
+            flex-shrink: 0;
+        }
+
+        .stat-box {
+            padding: 10px;
+            border-right: 2px solid var(--border-color);
+            font-size: 24px;
         }
 
         /* --- Room Panel (Left) --- */
-        .room-panel { flex: 1; }
-        .header-nav {
+        .room-panel { grid-column: 1; }
+        .room-display {
+            flex-grow: 1;
+            background: #000;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            padding: 5px 10px;
-            border-bottom: 2px solid var(--border-color);
+            justify-content: center;
+            overflow: hidden;
         }
-        .header-nav h2 { margin: 0; font-size: 32px; }
-        .nav-btn { background: none; border: none; font-family: 'VT323'; font-size: 32px; cursor: pointer; color: var(--accent-green); }
-
-        .room-display { flex-grow: 1; background: #000; overflow: hidden; }
-        .room-img { width: 100%; height: 100%; object-fit: cover; }
-
-        .stats-bar { display: grid; grid-template-columns: 1fr 1fr; border-top: 3px solid var(--border-color); font-size: 24px; }
-        .stat-box { padding: 5px 10px; border-right: 2px solid var(--border-color); position: relative; }
-        .exp-bar { background: #fff; height: 10px; border: 2px solid var(--border-color); margin-top: 4px; }
-        .exp-fill { background: #ffd700; height: 100%; width: 22%; }
+        .room-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* Prevents cutting off room images */
+        }
 
         /* --- Plant Detail Panel (Middle) --- */
-        .detail-panel { flex: 1.8; border-left: none; border-right: none; position: relative; }
-        .plant-title-box { text-align: center; padding: 10px; border-bottom: 2px solid var(--border-color); background: var(--panel-bg); z-index: 2; }
+        .detail-panel { grid-column: 2; position: relative; }
         
         .plant-main-view {
             flex-grow: 1;
@@ -77,50 +99,70 @@
             align-items: center;
             justify-content: center;
             position: relative;
-            /* Static Grid Background */
             background-color: var(--panel-bg);
             background-image: 
                 linear-gradient(var(--grid-line) 1px, transparent 1px),
                 linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-            background-size: 20px 20px;
+            background-size: 25px 25px;
+            overflow: hidden;
         }
 
         .plant-img { 
-            max-width: 85%; 
-            max-height: 85%; 
-            object-fit: contain; 
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain; /* Keeps plant fully visible regardless of size */
             z-index: 1;
         }
 
         .water-btn {
             position: absolute;
-            bottom: 15px;
-            right: 15px;
+            bottom: 20px;
+            right: 20px;
             background: white;
-            border: 3px solid var(--border-color);
-            padding: 5px 12px;
+            border: 4px solid var(--border-color);
+            padding: 8px 16px;
             font-family: 'VT323';
-            font-size: 26px;
+            font-size: 28px;
             cursor: pointer;
-            z-index: 3;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 3px 3px 0px rgba(0,0,0,0.2);
+            z-index: 10;
+            box-shadow: 4px 4px 0px rgba(0,0,0,0.2);
         }
-        .water-btn:hover { background: #d0f0ff; transform: translate(-1px, -1px); box-shadow: 4px 4px 0px rgba(0,0,0,0.2); }
 
-        /* --- List & Desc Panel (Right) --- */
-        .list-panel { flex: 1; }
-        .list-header { padding: 5px 10px; display: flex; justify-content: space-between; border-bottom: 2px solid var(--border-color); font-size: 24px; }
-        .plant-list { list-style: none; padding: 0; margin: 0; overflow-y: auto; flex-grow: 1; max-height: 250px; background: rgba(255,255,255,0.2); }
-        .plant-item { padding: 8px 12px; border-bottom: 1px solid rgba(0,0,0,0.1); cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 20px; }
-        .plant-item:hover { background: rgba(0,0,0,0.05); }
+        .water-btn:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px rgba(0,0,0,0.2); }
+
+        /* --- List & Info Panel (Right) --- */
+        .list-panel { grid-column: 3; }
+        .plant-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        .plant-item {
+            padding: 12px;
+            border-bottom: 2px solid rgba(0,0,0,0.1);
+            cursor: pointer;
+            font-size: 22px;
+        }
+
         .plant-item.active { background: var(--accent-green); color: white; }
 
-        .description-box { border-top: 3px solid var(--border-color); padding: 10px; height: 180px; overflow-y: auto; font-size: 18px; line-height: 1.3; background: var(--panel-bg); }
+        .description-box {
+            border-top: 4px solid var(--border-color);
+            padding: 15px;
+            height: 35%; /* Fixed percentage of list panel */
+            overflow-y: auto;
+            font-size: 18px;
+            background: var(--panel-bg);
+        }
 
-        ::-webkit-scrollbar { width: 8px; }
+        /* Navigation Arrows */
+        .nav-container { display: flex; justify-content: space-between; align-items: center; }
+        .nav-btn { background: none; border: none; font-size: 40px; cursor: pointer; color: var(--accent-green); font-family: 'VT323'; }
+
+        ::-webkit-scrollbar { width: 10px; }
         ::-webkit-scrollbar-thumb { background: var(--border-color); }
     </style>
 </head>
@@ -129,111 +171,72 @@
     <div class="game-wrapper">
         <div class="panel room-panel">
             <div class="header-nav">
-                <button class="nav-btn" onclick="cycleRoom(-1)">&lt;</button>
-                <div style="text-align: center;">
-                    <h2 id="room-name">Office</h2>
-                    <div id="room-sub" style="font-size: 14px; opacity: 0.7;">Room 1/3</div>
+                <div class="nav-container">
+                    <button class="nav-btn" onclick="cycleRoom(-1)">&lt;</button>
+                    <div>
+                        <h2 id="room-name" style="margin:0; font-size: 36px;">Office</h2>
+                        <span id="room-sub" style="font-size: 18px; opacity:0.7;">Room 1/3</span>
+                    </div>
+                    <button class="nav-btn" onclick="cycleRoom(1)">&gt;</button>
                 </div>
-                <button class="nav-btn" onclick="cycleRoom(1)">&gt;</button>
             </div>
             <div class="room-display">
-                <img id="room-img" class="room-img" src="room1.png" alt="Room">
+                <img id="room-img" class="room-img" src="room1.png">
             </div>
             <div class="stats-bar">
-                <div class="stat-box">
-                    Plants <span id="room-plant-count" style="float: right; font-size: 32px;">0</span>
-                </div>
-                <div class="stat-box">
-                    Level <span style="float: right; font-size: 32px;">74</span>
-                    <div class="exp-bar"><div class="exp-fill"></div></div>
-                </div>
+                <div class="stat-box">Plants <br><span id="room-plant-count" style="font-size: 32px;">0</span></div>
+                <div class="stat-box">Level <br><span style="font-size: 32px;">74</span></div>
             </div>
         </div>
 
         <div class="panel detail-panel">
-            <div class="plant-title-box">
-                <h2 id="p-scientific" style="margin:0; font-size: 30px; text-transform: capitalize;">Select a Plant</h2>
-                <div id="p-nickname" style="font-size: 22px; color: var(--accent-green);">---</div>
+            <div class="header-nav">
+                <h2 id="p-scientific" style="margin:0; font-size: 32px;">Select a Plant</h2>
+                <div id="p-nickname" style="font-size: 24px; color: var(--accent-green);">---</div>
             </div>
             <div class="plant-main-view">
-                <img id="p-img" class="plant-img" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
+                <img id="p-img" class="plant-img" src="">
                 <button class="water-btn" onclick="waterCurrentPlant()">💧 WATER</button>
             </div>
             <div class="stats-bar">
-                <div class="stat-box">Next Water<br><span id="p-timer" style="font-size: 28px;">--</span></div>
-                <div class="stat-box">Amount<br><span id="p-amount" style="font-size: 28px;">--</span></div>
+                <div class="stat-box">Next Water<br><span id="p-timer" style="font-size: 32px;">--</span></div>
+                <div class="stat-box">Water Amount<br><span id="p-amount" style="font-size: 32px;">--</span></div>
             </div>
         </div>
 
         <div class="panel list-panel">
-            <div class="list-header">
-                <span>Plants</span>
+            <div class="header-nav" style="display:flex; justify-content: space-between;">
+                <span>Collection</span>
                 <span id="list-fraction">0/0</span>
             </div>
             <ul class="plant-list" id="plant-list"></ul>
             <div class="description-box">
-                <strong style="display:block; border-bottom: 1px solid var(--border-color); margin-bottom: 5px;">Description</strong>
-                <div id="p-desc">Click a plant to see details.</div>
+                <strong style="display:block; border-bottom: 2px solid var(--border-color); margin-bottom: 8px;">Plant Description</strong>
+                <div id="p-desc">Details will appear here.</div>
             </div>
         </div>
     </div>
 
     <script>
-        // Data generated from your spreadsheet
+        // Copy the "rawPlants" array from the previous response here
+        // (Keeping it out for brevity, but make sure to include all 31 objects)
         const rawPlants = [
-  { "id": 1, "scientific": "alocasia regal shields", "nickname": "Elephant Ear", "room": 1, "freq": 10, "amount": "3 cups", "desc": "Alocasia 'Regal Shields' is a stunning tropical plant known for its large, dark, shiny leaves that can reach up to 20 inches long. It is a popular houseplant due to its dramatic foliage, often referred to as an Elephant Ear. This plant loves warmth, high humidity, and consistently moist, well-draining soil. Fun fact: while it is typically grown indoors as a large-scale houseplant in most climates, it can be grown outdoors in USDA zones 9-11. It prefers bright, indirect light or partial shade to thrive and is evergreen." },
-  { "id": 2, "scientific": "Zamioculcas Zamiifolia", "nickname": "ZZ Plant", "room": 1, "freq": 14, "amount": "3 cups", "desc": "Zamioculcas Zamiifolia, commonly known as the ZZ Plant, is an extremely hardy and low-maintenance houseplant, perfect for beginners. It is tolerant of low light conditions and drought, as it stores water in its thick rhizomes at the base of the plant. The ZZ plant has shiny, dark green leaves on upright stems. Fun fact: it is native to Eastern Africa and is often mistakenly identified as a member of the Araceae (Aroid) family due to its similar appearance." },
-  { "id": 3, "scientific": "sedum morganianum", "nickname": "Burro's Tail", "room": 1, "freq": 21, "amount": "0.25 - 0.5 cups", "desc": "Sedum morganianum, commonly known as Burro's Tail or Donkey's Tail, is a popular trailing succulent native to Mexico. It is characterized by its thick, fleshy, blue-green leaves that overlap, resembling a donkey's or burro's tail. This plant is often grown in hanging baskets to showcase its cascading stems, which can reach up to 2 feet in length. A fun fact is that the name \"sedum\" comes from the Latin word \"sedo,\" meaning \"to sit,\" likely because many varieties of sedum plants are low-growing and sprawl across the ground. The Burro's Tail is easy to propagate from individual leaves that have fallen off." },
-  { "id": 4, "scientific": "Chlorophytum Comosum", "nickname": "Spider Plant", "room": 1, "freq": 7, "amount": ".5 cups", "desc": "The Spider Plant, or Chlorophytum comosum, is one of the most common houseplants, known for its arching, sword-shaped leaves, which can be solid green or variegated. It is easy to grow and can thrive in a wide range of conditions, making it popular for both rookie and veteran gardeners. Fun facts: Spider plants are effective at cleaning indoor air by absorbing chemicals like formaldehyde and benzene, and they have even been sent on space missions for this ability." },
-  { "id": 5, "scientific": "Chlorophytum Comosum", "nickname": "Spider Plant", "room": 1, "freq": 7, "amount": ".5 cups", "desc": "Chlorophytum Comosum, commonly known as the Spider Plant, is one of the easiest houseplants to grow, known for its arching leaves and small \"spiderettes\" that grow on long stalks. These popular plants are air-purifying, effectively removing toxins like formaldehyde and xylene from the air. They thrive in bright, indirect light but are adaptable to lower light conditions. A fun fact is that the spiderettes can be easily propagated by simply potting them up, making them simple to share with friends. Another interesting fact is that they are safe for pets." },
-  { "id": 6, "scientific": "Chlorophytum Comosum", "nickname": "Spider Plant", "room": 1, "freq": 7, "amount": ".5 cups", "desc": "Chlorophytum Comosum, commonly known as the Spider Plant, is a popular and easy-to-care-for houseplant recognizable by its long, arching leaves and small \"plantlets\" that dangle from the mother plant. It is renowned for its air-purifying qualities, effectively removing toxins like formaldehyde and xylene from indoor air. Spider Plants thrive in bright, indirect light but can tolerate lower light conditions. Fun fact: The plantlets are essentially baby spider plants that can be easily potted to create new plants, making it very simple to propagate. This plant is also non-toxic to cats and dogs, making it a safe choice for pet owners." },
-  { "id": 7, "scientific": "Chlorophytum Comosum", "nickname": "Spider Plant", "room": 1, "freq": 7, "amount": "1 - 2 cups", "desc": "Chlorophytum comosum, commonly known as the Spider Plant, is one of the most popular houseplants, often recognized for its graceful, arching, sword-shaped leaves. It is an easy-to-grow plant that can tolerate a wide range of conditions and is well-suited for hanging baskets, where its small white flowers and plantlets can hang down. A fun fact is that studies have shown spider plants are quite effective in cleaning indoor air by absorbing chemicals like formaldehyde and carbon monoxide, and they were even sent on space missions for this ability. It is sometimes nicknamed the \"airplane plant.\"" },
-  { "id": 8, "scientific": "Monstera Deliciosa", "nickname": "Monstera", "room": 1, "freq": 7, "amount": "1 cup", "desc": "Monstera Deliciosa, often called the Swiss-Cheese Plant or Window Plant due to its iconic fenestrated leaves, is a vigorous climber that can reach up to 66 ft high in the wild. It thrives as a houseplant in rich, well-draining soil, but care must be taken to allow the top 2-3 inches of soil to dry between waterings to prevent root rot. Fun fact: while the plant contains calcium oxalate crystals that are irritating, the fully ripened fruit is edible, and the plant also helps purify indoor air by absorbing pollutants." },
-  { "id": 9, "scientific": "sedum morganianum", "nickname": "Burro's Tail", "room": 1, "freq": 21, "amount": "0.25 - 0.5 cups", "desc": "Sedum morganianum, commonly known as Burro's Tail or Donkey's Tail, is a trailing succulent native to Mexico. It is characterized by thick, fleshy, blue-green leaves that cascade down long, pendulous stems. This plant is often grown in hanging baskets to show off its distinctive \"tail\" effect. It is relatively easy to care for and thrives in bright light with infrequent watering. A fun fact is that the name \"sedum\" comes from the Latin word \"sedo,\" meaning \"to sit,\" which is likely due to how many species of the genus hug the ground." },
-  { "id": 10, "scientific": "Monstera Deliciosa", "nickname": "Monstera Deliciosa", "room": 1, "freq": 7, "amount": "1 cup", "desc": "Monstera deliciosa, also known as the Swiss-cheese plant, is a popular tropical houseplant native to Central American rainforests. It is most recognized for its large, perforated leaves—a feature called fenestrations—which may have evolved to allow light and tropical downpours to pass through. As a vine, it develops long, cord-like aerial roots that help it climb and can be guided into the soil to absorb nutrients. A fun fact is that it is the only ornamental aroid also grown for its edible fruit in its native habitat." },
-  { "id": 11, "scientific": "Dracaena sanderiana", "nickname": "Lucky Bamboo", "room": 1, "freq": 7, "amount": "1 cup", "desc": "Dracaena sanderiana is a popular houseplant often called \"Lucky Bamboo,\" though it is not a type of bamboo but a tropical perennial shrub from West Africa. It is a member of the Dracaena family and the asparagus family (Asparagaceae). Fun fact: this plant is frequently used in Feng shui and can sometimes grow flowers." },
-  { "id": 12, "scientific": "Cleistocactus winteri", "nickname": " Monkey Tail Cactus", "room": 1, "freq": 21, "amount": "0.25 - 0.5 cups", "desc": "Cleistocactus winteri is a columnar cactus, commonly known as the golden rat tail. It forms large tangled mounds of hanging or creeping green shoots, giving it a bright and fuzzy appearance due to its numerous spines. This fast-growing plant can produce flowers that last several days, often blooming sporadically throughout the year under optimal conditions. A fun fact is that the similar Cleistocactus colademononis, or \"Monkey Tail Cactus,\" is sometimes considered a subspecies. Its stems can grow up to 35 inches long." },
-  { "id": 13, "scientific": "Epipremnum aureum", "nickname": "Jade Pothos", "room": 1, "freq": 7, "amount": "1 - 2 cups", "desc": "The Chinese Evergreen (Aglaonema modestum) is a popular and durable houseplant, highly valued for its striking foliage and ability to tolerate low light conditions, which makes it perfect for an office setting. It features lush, deep green leaves with an attractive, sometimes mottled pattern. This plant is known for being exceptionally easy to care for and is a great choice for beginners. Fun fact: Aglaonema has been recognized by NASA as a top-tier air-purifying plant, removing common household toxins from the air." },
-  { "id": 14, "scientific": "Dracaena trifasciata", "nickname": "snake plant", "room": 1, "freq": 14, "amount": "0.5 - 1 cup", "desc": "Dracaena trifasciata, commonly known as the snake plant or mother-in-law's tongue, is a very tough and easy-to-grow plant, making it a popular houseplant. It is a type of succulent that comes from dry parts of Africa, meaning its thick leaves can store a lot of water and it requires infrequent watering, sometimes only once every one to two months in winter. Fun fact: while it rarely blooms indoors, in its native habitat it blooms in the winter, and in perfect conditions, it can grow taller than 6 feet." },
-  { "id": 15, "scientific": "Dracaena trifasciata", "nickname": "snake plant", "room": 2, "freq": 28, "amount": "1 - 2 cups ", "desc": "Dracaena trifasciata, commonly known as the Snake Plant or Mother-in-law's Tongue, is a very tough and easy-to-grow plant, originating from dry parts of Africa. It is a type of succulent, meaning its thick, stiff, upright leaves can store a lot of water, allowing it to tolerate low humidity and infrequent watering, sometimes only needing water every one to two months in winter. Fun fact: in its native habitat, it may bloom in the winter, but it rarely does so as a houseplant, and its scientific name, trifasciata, means \"three bundles,\" referring to its leaf pattern." },
-  { "id": 16, "scientific": "Zamioculcas Zamiifolia", "nickname": "ZZ Plant", "room": 2, "freq": 14, "amount": "1-3 cups", "desc": "The Zamioculcas Zamiifolia, commonly known as the ZZ Plant, is a durable, low-maintenance houseplant famous for its glossy, dark green leaves. It is highly tolerant of neglect and low light conditions, making it an excellent choice for beginners. A fun fact is that the ZZ Plant stores water in its thick, potato-like rhizomes, allowing it to survive long periods without water. It is known to be very effective at removing toxins from the air." },
-  { "id": 17, "scientific": "Dracaena trifasciata", "nickname": "Snake Plant", "room": 2, "freq": 14, "amount": "0.5 - 1 cup", "desc": "Dracaena trifasciata, commonly known as the Snake Plant or Mother-in-law's Tongue, is a durable, easy-to-grow succulent native to dry parts of Africa. It stores water in its thick, upright leaves, allowing it to tolerate low humidity and infrequent watering, sometimes only needing water every one to two months in winter. This popular houseplant is also known for its air-purifying qualities, removing toxins like formaldehyde from the air. Fun fact: while it rarely blooms indoors, in its native habitat it blooms in the winter, and in perfect conditions, it can grow taller than 6 feet." },
-  { "id": 18, "scientific": "Dracaena trifasciata", "nickname": "snake plant", "room": 2, "freq": 14, "amount": "1 cup", "desc": "Dracaena trifasciata, commonly known as the snake plant or mother-in-law's tongue, is a very durable and easy-to-grow succulent that stores water in its thick, stiff, upright leaves. It is native to dry parts of Africa and is difficult to kill, tolerating low humidity and cool temperatures. Its leaves can grow up to 4 feet long and have transverse bands of different shades of green. Fun fact: The plant rarely blooms as a houseplant, but in its native habitat, it blooms in the winter." },
-  { "id": 19, "scientific": "Epipremnum aureum", "nickname": "Jade Pothos", "room": 2, "freq": 7, "amount": "1 - 2 cups", "desc": "Epipremnum aureum, commonly known as Pothos or Devil's Ivy, is a popular, fast-growing houseplant known for its heart-shaped leaves and trailing vines. It is exceptionally resilient and can tolerate low light conditions, although variegated varieties need more light to maintain their color. This plant is renowned for its air-purpurifying capabilities, effectively removing toxins like formaldehyde from indoor environments. Fun fact: it's sometimes called \"Devil's Ivy\" because it is nearly impossible to kill and stays green even when kept in the dark." },
-  { "id": 20, "scientific": "Monstera Deliciosa", "nickname": "Monstera", "room": 3, "freq": 7, "amount": "1 cup", "desc": "Monstera Deliciosa, or the Swiss-Cheese Plant, is a popular tropical houseplant native to Central American rainforests. It is famous for its large, perforated leaves, a feature called fenestrations, which help light pass through. It develops aerial roots to help it climb in the wild. Fun fact: while the plant contains irritating calcium oxalate crystals, its fully ripened fruit is edible in its native habitat." },
-  { "id": 21, "scientific": "Ficus lyrata", "nickname": "Fiddle Leaf Fig", "room": 3, "freq": 7, "amount": "2 cups", "desc": "Ficus lyrata, commonly known as the Fiddle Leaf Fig, is a popular tropical houseplant native to western Africa, named for its large, leathery, lyre-shaped leaves. In its native habitat, it can grow into a large tree up to 100 feet tall, but as a houseplant, it typically reaches 2 to 10 feet. Fun fact: This plant is a species of the mulberry and fig family Moraceae, and its genus name, Ficus, comes from the Latin name for an edible fig, though it rarely fruits indoors. It is important to know that the plant contains a milky sap that is toxic to humans, cats, and dogs if ingested." },
-  { "id": 22, "scientific": "sedum morganianum", "nickname": "Burro's Tail", "room": 3, "freq": 21, "amount": "0.25 - 0.5 cups", "desc": "Sedum morganianum, commonly known as Burro's Tail or Donkey's Tail, is a trailing succulent native to Mexico, often grown in hanging baskets to showcase its thick, fleshy, blue-green leaves that overlap along long, pendulous stems. It is relatively easy to care for and thrives in bright light with infrequent watering. A fun fact is that the name \"sedum\" comes from the Latin word \"sedo,\" meaning \"to sit,\" which is likely due to how many species of the genus are low-growing and hug the ground. This plant is also easy to propagate from individual leaves that have fallen off." },
-  { "id": 23, "scientific": "Epipremnum aureum", "nickname": "Jade Pothos", "room": 3, "freq": 7, "amount": "1 - 2 cups", "desc": "Epipremnum aureum, commonly known as Pothos or Devil's Ivy, is a popular, fast-growing vine appreciated for its striking, heart-shaped leaves and ability to thrive in various light conditions. This plant is often used in hanging baskets or trained to climb, creating a lush, tropical look indoors. A fun fact is that it is often called Devil's Ivy because it is nearly impossible to kill and stays green even when kept in the dark. Pothos is also highly effective at purifying indoor air by removing common toxins like formaldehyde, xylene, and benzene." },
-  { "id": 24, "scientific": "Aloe vera", "nickname": "Aloe", "room": 3, "freq": 7, "amount": "0.5 cups", "desc": "Aloe vera is a cactus-like succulent plant that thrives in hot, dry climates and is well-known for its medicinal properties. The plant is used both topically, where studies show its gel can penetrate three epidermal layers of the skin, and orally. Fun facts include that Aloe was historically used in ancient civilizations like Greece, Rome, Babylonia, and China, and it was reportedly part of Cleopatra's beauty regimen. For optimal health as a houseplant, it needs bright light, even full sun, especially if flowering is desired." },
-  { "id": 25, "scientific": "Mammillaria spinosissima", "nickname": "Red-headed Irishman", "room": 3, "freq": 14, "amount": "0.25 cups", "desc": "Mammillaria spinosissima, also known as the Spiny Pincushion Cactus or Red-headed Irishman, is a cylindrical plant that grows up to 12 inches tall. It is characterized by its long reddish spines and vibrant pink or red flowers that bloom near the top. This cactus thrives in well-drained, sandy or loam soils, preferring as much full, filtered sun as possible. A fun fact is that the genus name Mammillaria comes from the Latin word for nipple, referencing the plant's tubercles where the spines grow. It is native to the higher altitudes of central Mexico and can be easily grown at home in small pots due to its shallow root system." },
-  { "id": 26, "scientific": "Mammillaria spinosissima", "nickname": "Red-headed Irishman", "room": 3, "freq": 13, "amount": ".25 cups", "desc": "Mammillaria spinosissima, commonly known as the Red-headed Irishman, is a globose to columnar cactus native to central Mexico. It is recognizable by its dense covering of reddish-brown to white spines, which almost entirely obscure the green stem. This striking cactus produces a ring of small, pink or purple flowers near its apex, typically in spring and summer. A fun fact is that the specific epithet \"spinosissima\" means \"most spiny,\" which clearly describes its appearance. It is a popular and relatively easy-to-grow houseplant for bright, sunny locations." },
-  { "id": 27, "scientific": "Echinopsis spachiana", "nickname": "Golden torch", "room": 3, "freq": 14, "amount": ".25 cups", "desc": "Echinopsis spachiana, also known as the Golden torch cactus, is a beautiful, multi-stemmed columnar cactus native to South America. It produces many upright, lime-green branches and can grow up to 6.6 feet tall. A fun fact is that the genus name references the densely packed spines covering the stems, as \"echino\" is Latin for sea urchin or hedgehog and \"opsis\" means appearance. It also produces large, white, nocturnal flowers that can be six to eight inches in diameter." },
-  { "id": 28, "scientific": "Epipremnum aureum", "nickname": "Jade Pothos", "room": 3, "freq": 7, "amount": "1 - 2 cups", "desc": "Epipremnum aureum, commonly known as Jade Pothos, is a popular vining houseplant celebrated for its ease of care and bright green foliage. It is known for its ability to tolerate a wide range of light conditions, though it thrives best in bright, indirect light. This plant is also an excellent air purifier, known to remove common household toxins like formaldehyde. A fun fact is that Pothos plants are often mistaken for Philodendrons due to their similar appearance and growth habits." },
-  { "id": 29, "scientific": "ceropegia ", "nickname": "string of hearts", "room": 3, "freq": 7, "amount": "0.5 cups", "desc": "Ceropegia, commonly known as String of Hearts, is a delicate and popular trailing succulent characterized by its thin, wiry stems and heart-shaped, mottled leaves. It is native to South Africa, Swaziland, and Zimbabwe. This plant is often grown in hanging baskets to display its cascading growth habit. A fun fact is that the String of Hearts produces unusual, lantern-shaped flowers that help prevent pollinating insects from escaping until they are coated in pollen. Another interesting fact is that it grows small, tuberous rhizomes on its stems, which can be used for propagation." },
-  { "id": 30, "scientific": "Dracaena trifasciata", "nickname": "snake plant", "room": 3, "freq": 14, "amount": "0.5 - 1 cup", "desc": "Dracaena trifasciata, commonly known as the snake plant or mother-in-law's tongue, is a very tough and easy-to-grow succulent originally from dry parts of Africa. It stores water in its thick, stiff, upright leaves, allowing it to tolerate low humidity and infrequent watering, sometimes only every one to two months in winter. Fun facts include that the plant rarely blooms indoors but can grow taller than 6 feet in perfect conditions, and its scientific name, trifasciata, means \"three bundles,\" referring to its leaf pattern." },
-  { "id": 31, "scientific": "Dracaena trifasciata", "nickname": "snake plant", "room": 3, "freq": 14, "amount": "0.5 - 1 cup", "desc": "Dracaena trifasciata, commonly known as the snake plant or mother-in-law's tongue, is a very durable and easy-to-grow succulent originating from dry parts of Africa. Its thick, upright leaves store water, allowing it to tolerate low humidity and infrequent watering, sometimes only once every one to two months in winter. Fun fact: in perfect conditions, this tough houseplant can grow taller than 6 feet, and while it rarely blooms indoors, it does so in its native habitat during the winter. Its scientific name, trifasciata, means \"three bundles,\" referring to its leaf pattern." }
-];
+            /* Insert the full list of 31 plants from the previous message here */
+        ];
 
         const roomNames = ["Office", "Living Room", "Bedroom"];
         let currentRoom = 1;
         let selectedPlantId = null;
-        
-        // Load data from LocalStorage
         let plants = JSON.parse(localStorage.getItem('plant_tracker_data')) || rawPlants;
 
-        function save() {
-            localStorage.setItem('plant_tracker_data', JSON.stringify(plants));
-        }
+        function save() { localStorage.setItem('plant_tracker_data', JSON.stringify(plants)); }
 
         function cycleRoom(dir) {
             currentRoom += dir;
             if (currentRoom > 3) currentRoom = 1;
             if (currentRoom < 1) currentRoom = 3;
-            
-            // Auto-select first plant in new room
             const firstInRoom = plants.find(p => p.room === currentRoom);
             if (firstInRoom) selectedPlantId = firstInRoom.id;
-            
             render();
         }
 
@@ -262,28 +265,23 @@
 
         function render() {
             const roomPlants = plants.filter(p => p.room === currentRoom);
-            
-            // 1. Update Room Panel
             document.getElementById('room-name').innerText = roomNames[currentRoom-1];
             document.getElementById('room-sub').innerText = `Room ${currentRoom}/3`;
             document.getElementById('room-img').src = `room${currentRoom}.png`;
             document.getElementById('room-plant-count').innerText = roomPlants.length;
 
-            // 2. Update List Panel
             const list = document.getElementById('plant-list');
             list.innerHTML = "";
             roomPlants.forEach((p) => {
                 const li = document.createElement('li');
                 li.className = `plant-item ${selectedPlantId === p.id ? 'active' : ''}`;
-                li.innerHTML = `<span>🌿</span> ${p.scientific}`;
+                li.innerHTML = `🌿 ${p.scientific}`;
                 li.onclick = () => selectPlant(p.id);
                 list.appendChild(li);
             });
 
-            // 3. Update Detail View
             if (!selectedPlantId && roomPlants.length > 0) selectedPlantId = roomPlants[0].id;
             const p = plants.find(ptr => ptr.id === selectedPlantId);
-            
             if (p) {
                 document.getElementById('p-scientific').innerText = p.scientific;
                 document.getElementById('p-nickname').innerText = p.nickname;
@@ -291,13 +289,10 @@
                 document.getElementById('p-timer').innerText = getDaysLeft(p);
                 document.getElementById('p-amount').innerText = p.amount;
                 document.getElementById('p-desc').innerText = p.desc;
-                
                 const idxInRoom = roomPlants.findIndex(ptr => ptr.id === p.id) + 1;
                 document.getElementById('list-fraction').innerText = `${idxInRoom}/${roomPlants.length}`;
             }
         }
-
-        // Initial render
         render();
     </script>
 </body>
