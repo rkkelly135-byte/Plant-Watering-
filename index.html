@@ -28,6 +28,7 @@
             width: 100vw;
             padding: 20px;
             overflow: hidden;
+            position: relative;
         }
 
         /* Responsive Grid Layout */
@@ -42,6 +43,7 @@
             background-color: var(--bg-color);
             border: 6px solid var(--border-color);
             padding: 15px;
+            position: relative;
         }
 
         .panel {
@@ -53,46 +55,50 @@
             height: 100%;
         }
 
-        /* --- Global UI Elements --- */
+        /* --- Header & Nav --- */
         .header-nav {
             padding: 10px;
             border-bottom: 3px solid var(--border-color);
             text-align: center;
-        }
-
-        .stats-bar {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            border-top: 4px solid var(--border-color);
             background: var(--panel-bg);
-            flex-shrink: 0;
         }
 
-        .stat-box {
-            padding: 10px;
-            border-right: 2px solid var(--border-color);
-            font-size: 24px;
+        /* Settings Icon */
+        .settings-icon {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            font-size: 32px;
+            cursor: pointer;
+            z-index: 100;
+            background: var(--panel-bg);
+            border: 3px solid var(--border-color);
+            padding: 5px 10px;
         }
 
-        /* --- Room Panel (Left) --- */
-        .room-panel { grid-column: 1; }
-        .room-display {
-            flex-grow: 1;
-            background: #000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-        .room-img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain; /* Prevents cutting off room images */
+        /* Settings Modal */
+        #settings-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            background: var(--panel-bg);
+            border: 6px solid var(--border-color);
+            z-index: 200;
+            padding: 20px;
+            box-shadow: 10px 10px 0px rgba(0,0,0,0.4);
         }
 
-        /* --- Plant Detail Panel (Middle) --- */
-        .detail-panel { grid-column: 2; position: relative; }
-        
+        .modal-header { border-bottom: 3px solid var(--border-color); margin-bottom: 15px; font-size: 28px; }
+        .setting-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; font-size: 24px; }
+        .close-modal { background: var(--accent-green); color: white; border: 3px solid var(--border-color); font-family: 'VT323'; font-size: 20px; width: 100%; cursor: pointer; padding: 5px; }
+
+        /* --- UI Panels --- */
+        .room-display { flex-grow: 1; background: #000; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .room-img { width: 100%; height: 100%; object-fit: contain; }
+
         .plant-main-view {
             flex-grow: 1;
             display: flex;
@@ -100,19 +106,11 @@
             justify-content: center;
             position: relative;
             background-color: var(--panel-bg);
-            background-image: 
-                linear-gradient(var(--grid-line) 1px, transparent 1px),
-                linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+            background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
             background-size: 25px 25px;
-            overflow: hidden;
         }
 
-        .plant-img { 
-            max-width: 90%;
-            max-height: 90%;
-            object-fit: contain; /* Keeps plant fully visible regardless of size */
-            z-index: 1;
-        }
+        .plant-img { max-width: 90%; max-height: 90%; object-fit: contain; z-index: 1; }
 
         .water-btn {
             position: absolute;
@@ -125,109 +123,139 @@
             font-size: 28px;
             cursor: pointer;
             z-index: 10;
-            box-shadow: 4px 4px 0px rgba(0,0,0,0.2);
         }
 
-        .water-btn:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px rgba(0,0,0,0.2); }
+        .stats-bar { display: grid; grid-template-columns: 1fr 1fr; border-top: 4px solid var(--border-color); }
+        .stat-box { padding: 10px; border-right: 2px solid var(--border-color); font-size: 24px; }
 
-        /* --- List & Info Panel (Right) --- */
-        .list-panel { grid-column: 3; }
-        .plant-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            overflow-y: auto;
-            flex-grow: 1;
-        }
-
-        .plant-item {
-            padding: 12px;
-            border-bottom: 2px solid rgba(0,0,0,0.1);
-            cursor: pointer;
-            font-size: 22px;
-        }
-
+        .plant-list { list-style: none; padding: 0; margin: 0; overflow-y: auto; flex-grow: 1; }
+        .plant-item { padding: 12px; border-bottom: 2px solid rgba(0,0,0,0.1); cursor: pointer; font-size: 22px; }
         .plant-item.active { background: var(--accent-green); color: white; }
 
-        .description-box {
-            border-top: 4px solid var(--border-color);
-            padding: 15px;
-            height: 35%; /* Fixed percentage of list panel */
-            overflow-y: auto;
-            font-size: 18px;
-            background: var(--panel-bg);
-        }
+        .description-box { border-top: 4px solid var(--border-color); padding: 15px; height: 35%; overflow-y: auto; font-size: 18px; }
 
-        /* Navigation Arrows */
-        .nav-container { display: flex; justify-content: space-between; align-items: center; }
         .nav-btn { background: none; border: none; font-size: 40px; cursor: pointer; color: var(--accent-green); font-family: 'VT323'; }
 
-        ::-webkit-scrollbar { width: 10px; }
-        ::-webkit-scrollbar-thumb { background: var(--border-color); }
+        /* Toggle Switch Style */
+        .switch { position: relative; display: inline-block; width: 50px; height: 24px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; border: 2px solid var(--border-color); transition: .4s; }
+        .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: var(--border-color); transition: .4s; }
+        input:checked + .slider { background-color: var(--accent-green); }
+        input:checked + .slider:before { transform: translateX(26px); }
+
     </style>
 </head>
 <body>
 
+    <div class="settings-icon" onclick="toggleSettings()">⚙️</div>
+
+    <div id="settings-modal">
+        <div class="modal-header">Settings</div>
+        <div class="setting-row">
+            <span>Music</span>
+            <label class="switch">
+                <input type="checkbox" id="music-toggle" onchange="updateSettings()" checked>
+                <span class="slider"></span>
+            </label>
+        </div>
+        <div class="setting-row">
+            <span>Sounds</span>
+            <label class="switch">
+                <input type="checkbox" id="sound-toggle" onchange="updateSettings()" checked>
+                <span class="slider"></span>
+            </label>
+        </div>
+        <button class="close-modal" onclick="toggleSettings()">CLOSE</button>
+    </div>
+
     <div class="game-wrapper">
         <div class="panel room-panel">
             <div class="header-nav">
-                <div class="nav-container">
+                <div style="display:flex; justify-content: space-between; align-items:center;">
                     <button class="nav-btn" onclick="cycleRoom(-1)">&lt;</button>
                     <div>
-                        <h2 id="room-name" style="margin:0; font-size: 36px;">Office</h2>
-                        <span id="room-sub" style="font-size: 18px; opacity:0.7;">Room 1/3</span>
+                        <h2 id="room-name" style="margin:0; font-size:36px;">Office</h2>
+                        <span id="room-sub" style="font-size:18px; opacity:0.7;">Room 1/3</span>
                     </div>
                     <button class="nav-btn" onclick="cycleRoom(1)">&gt;</button>
                 </div>
             </div>
-            <div class="room-display">
-                <img id="room-img" class="room-img" src="room1.png">
-            </div>
+            <div class="room-display"><img id="room-img" class="room-img" src="room1.png"></div>
             <div class="stats-bar">
-                <div class="stat-box">Plants <br><span id="room-plant-count" style="font-size: 32px;">0</span></div>
-                <div class="stat-box">Level <br><span style="font-size: 32px;">74</span></div>
+                <div class="stat-box">Plants <br><span id="room-plant-count" style="font-size:32px;">0</span></div>
+                <div class="stat-box">Level <br><span style="font-size:32px;">74</span></div>
             </div>
         </div>
 
         <div class="panel detail-panel">
             <div class="header-nav">
-                <h2 id="p-scientific" style="margin:0; font-size: 32px;">Select a Plant</h2>
-                <div id="p-nickname" style="font-size: 24px; color: var(--accent-green);">---</div>
+                <h2 id="p-scientific" style="margin:0; font-size:32px;">Select a Plant</h2>
+                <div id="p-nickname" style="font-size:24px; color:var(--accent-green);">---</div>
             </div>
             <div class="plant-main-view">
                 <img id="p-img" class="plant-img" src="">
                 <button class="water-btn" onclick="waterCurrentPlant()">💧 WATER</button>
             </div>
             <div class="stats-bar">
-                <div class="stat-box">Next Water<br><span id="p-timer" style="font-size: 32px;">--</span></div>
-                <div class="stat-box">Water Amount<br><span id="p-amount" style="font-size: 32px;">--</span></div>
+                <div class="stat-box">Next Water<br><span id="p-timer" style="font-size:32px;">--</span></div>
+                <div class="stat-box">Amount<br><span id="p-amount" style="font-size:32px;">--</span></div>
             </div>
         </div>
 
         <div class="panel list-panel">
-            <div class="header-nav" style="display:flex; justify-content: space-between;">
+            <div class="header-nav" style="display:flex; justify-content:space-between;">
                 <span>Collection</span>
                 <span id="list-fraction">0/0</span>
             </div>
             <ul class="plant-list" id="plant-list"></ul>
             <div class="description-box">
-                <strong style="display:block; border-bottom: 2px solid var(--border-color); margin-bottom: 8px;">Plant Description</strong>
+                <strong style="display:block; border-bottom:2px solid var(--border-color); margin-bottom:8px;">Plant Description</strong>
                 <div id="p-desc">Details will appear here.</div>
             </div>
         </div>
     </div>
 
+    <audio id="bg-music" src="plantbackground1.mp3" loop></audio>
+    <audio id="water-sfx" src="watering.wav"></audio>
+
     <script>
-        // Copy the "rawPlants" array from the previous response here
-        // (Keeping it out for brevity, but make sure to include all 31 objects)
         const rawPlants = [
-            /* Insert the full list of 31 plants from the previous message here */
+            // ... [Insert the 31 plant JSON objects from the previous message here] ...
         ];
 
         const roomNames = ["Office", "Living Room", "Bedroom"];
         let currentRoom = 1;
         let selectedPlantId = null;
         let plants = JSON.parse(localStorage.getItem('plant_tracker_data')) || rawPlants;
+
+        // Settings State
+        let settings = JSON.parse(localStorage.getItem('plant_settings')) || { music: true, sounds: true };
+
+        function initAudio() {
+            const music = document.getElementById('bg-music');
+            document.getElementById('music-toggle').checked = settings.music;
+            document.getElementById('sound-toggle').checked = settings.sounds;
+            
+            // Browsers block auto-play until user interacts
+            document.body.addEventListener('click', () => {
+                if(settings.music && music.paused) music.play();
+            }, { once: true });
+        }
+
+        function toggleSettings() {
+            const modal = document.getElementById('settings-modal');
+            modal.style.display = modal.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function updateSettings() {
+            settings.music = document.getElementById('music-toggle').checked;
+            settings.sounds = document.getElementById('sound-toggle').checked;
+            localStorage.setItem('plant_settings', JSON.stringify(settings));
+
+            const music = document.getElementById('bg-music');
+            if(settings.music) music.play(); else music.pause();
+        }
 
         function save() { localStorage.setItem('plant_tracker_data', JSON.stringify(plants)); }
 
@@ -247,6 +275,13 @@
 
         function waterCurrentPlant() {
             if (!selectedPlantId) return;
+            
+            if(settings.sounds) {
+                const sfx = document.getElementById('water-sfx');
+                sfx.currentTime = 0;
+                sfx.play();
+            }
+
             const plant = plants.find(p => p.id === selectedPlantId);
             plant.lastWatered = new Date().toISOString();
             save();
@@ -293,7 +328,10 @@
                 document.getElementById('list-fraction').innerText = `${idxInRoom}/${roomPlants.length}`;
             }
         }
+
+        initAudio();
         render();
     </script>
 </body>
 </html>
+
